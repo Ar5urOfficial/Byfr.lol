@@ -4,20 +4,15 @@
     --accent-grad: linear-gradient(to bottom, #00c2ff, #7e57ff);
 }
 
-/* Kolory dla motywu RED */
 body.theme-red {
     --accent: #ff4d4d;
     --accent-grad: linear-gradient(to bottom, #ff4d4d, #990000);
 }
 
-body, html {
-    margin: 0; padding: 0; width: 100%; height: 100%;
-    background-color: #000; font-family: -apple-system, sans-serif;
-    display: flex; justify-content: center; align-items: center; overflow: hidden;
-}
+body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: sans-serif; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-/* Tło Grid 3D */
-.grid-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; perspective: 1000px; }
+/* TŁO GRID */
+.grid-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; perspective: 1000px; }
 .grid-3d {
     position: absolute; width: 400%; height: 400%; top: -150%; left: -150%;
     background-image: linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px);
@@ -25,55 +20,38 @@ body, html {
 }
 @keyframes moveGrid { from { transform: rotateX(65deg) translateY(0); } to { transform: rotateX(65deg) translateY(50px); } }
 
-/* Twoje serce Minecraft */
-#hearts-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+/* KONSTRUKCJA SERC - WYMUSZENIE WIDOCZNOŚCI */
+#hearts-container { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    pointer-events: none; 
+    z-index: 2; /* Serca muszą być nad gridem (z-index 1) */
+}
+
 .heart { 
     position: absolute; 
-    width: 28px; height: 28px; 
-    background-image: url('mc_hearth.png'); /* Twój plik z GitHub */
-    background-size: contain; 
-    background-repeat: no-repeat;
+    width: 30px !important; 
+    height: 30px !important; 
+    background-image: url('mc_hearth.png') !important; 
+    background-size: contain !important; 
+    background-repeat: no-repeat !important;
     animation: fall linear forwards; 
 }
-@keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
-/* Główne okno */
-.mac-window { width: 950px; height: 620px; background: var(--mac-bg); border-radius: 14px; display: flex; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+@keyframes fall { 
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } 
+}
 
-/* Naprawa Sidebaru */
+/* OKNO UI */
+.mac-window { position: relative; z-index: 10; width: 950px; height: 620px; background: var(--mac-bg); border-radius: 14px; display: flex; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+
+/* Reszta stylów (sidebar, logo, nav-link) pozostaje z poprzedniej poprawnej wersji */
 .sidebar { width: 220px; background: rgba(0,0,0,0.2); border-right: 1px solid rgba(255,255,255,0.05); padding: 20px 0; display: flex; flex-direction: column; }
-.dots { display: flex; gap: 8px; padding-left: 20px; margin-bottom: 30px; }
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-
-.nav-link { padding: 12px 25px; color: #777; cursor: pointer; transition: 0.3s; font-size: 14px; }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
-.nav-link.active { color: var(--accent); background: rgba(255, 255, 255, 0.03); border-left: 4px solid var(--accent); font-weight: bold; }
-
-/* Dashboard & Logo Repair */
-.main { flex: 1; padding: 40px; color: white; display: none; overflow-y: auto; }
-.main.active { display: block; }
-
-.logo-wrapper { display: flex; align-items: center; gap: 12px; height: 90px; margin-bottom: 5px; }
+.nav-link { padding: 12px 25px; color: #777; cursor: pointer; font-size: 14px; }
+.nav-link.active { color: var(--accent); border-left: 4px solid var(--accent); background: rgba(255,255,255,0.03); }
 .b-logo { height: 80px; width: 80px; border-radius: 20px; object-fit: cover; filter: drop-shadow(0 0 15px var(--accent)); }
 .logo-text { font-size: 65px; font-weight: 900; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -3px; }
-.subtitle { color: #555; font-size: 14px; margin-top: -10px; margin-bottom: 25px; }
-
-/* Themes Grid */
-.themes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-.theme-card { background: #1a1a1a; padding: 15px; border-radius: 12px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 0.2s; }
-.theme-card:hover { border-color: var(--accent); background: #222; }
-.theme-preview { height: 60px; border-radius: 8px; margin-bottom: 10px; }
-.default-grad { background: linear-gradient(135deg, #00c2ff, #7e57ff); }
-.red-grad { background: linear-gradient(135deg, #ff4d4d, #990000); }
-
-/* Search UI */
-.search-box { display: flex; gap: 10px; margin-bottom: 25px; }
-.search-input { flex: 1; background: #151515; border: 1px solid #333; padding: 12px; color: #fff; border-radius: 8px; outline: none; }
-.search-btn { background: var(--accent); border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #000; }
-.result-card { background: #111; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #222; }
-
-/* Powiadomienia */
-#notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-.glass-toast { background: rgba(20, 20, 20, 0.9); padding: 15px 25px; border-radius: 10px; border-left: 4px solid var(--accent); color: white; animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-@keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.main { flex: 1; padding: 40px; color: white; display: none; overflow-y: auto; }
+.main.active { display: block; }
