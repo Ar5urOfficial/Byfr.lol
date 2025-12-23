@@ -13,7 +13,7 @@
     <div class="grid-container"><div class="grid-3d"></div></div>
     <div id="notification-container"></div>
 
-    <div class="mac-window">
+    <div class="mac-window anim-fade-up">
         <div class="sidebar">
             <div class="dots">
                 <div class="dot red"></div>
@@ -26,36 +26,36 @@
         </div>
 
         <div id="home" class="main active">
-            <div class="dashboard-header">
+            <div class="dashboard-header anim-slide-in">
                 <div class="logo-wrapper">
                     <img src="https://raw.githubusercontent.com/ar5urofficial/Byfr.lol/main/logo_Byfr.png" alt="B" class="b-logo">
                     <span class="logo-text">YFR</span>
                 </div>
                 <p class="subtitle">Modern Script Management OS</p>
             </div>
-            <div class="status-card">
+            <div class="status-card anim-slide-in" style="animation-delay: 0.1s;">
                 <p>Status: <span class="status-online">System Online</span></p>
             </div>
         </div>
 
         <div id="scripts" class="main">
-            <h2>ScriptBlox Hub</h2>
-            <div class="search-box">
+            <h2 class="anim-slide-in">ScriptBlox Hub</h2>
+            <div class="search-box anim-slide-in" style="animation-delay: 0.1s;">
                 <input type="text" id="q" class="search-input" placeholder="Wyszukaj skrypt...">
-                <button onclick="search()" class="search-btn">SZUKAJ</button>
+                <button onclick="search()" class="btn-primary">SZUKAJ</button>
             </div>
             <div id="results-list"></div>
         </div>
 
         <div id="themes" class="main">
-            <h2>Themes</h2>
+            <h2 class="anim-slide-in">Themes</h2>
             <div class="themes-grid">
-                <div class="theme-card" onclick="setTheme('default')">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #00c2ff, #7e57ff);"></div>
+                <div class="theme-card anim-slide-in" onclick="setTheme('default')" style="animation-delay: 0.1s;">
+                    <div class="theme-preview default-grad"></div>
                     <span>Default Blue</span>
                 </div>
-                <div class="theme-card" onclick="setTheme('red')">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff4d4d, #990000);"></div>
+                <div class="theme-card anim-slide-in" onclick="setTheme('red')" style="animation-delay: 0.2s;">
+                    <div class="theme-preview red-grad"></div>
                     <span>Minecraft Red</span>
                 </div>
             </div>
