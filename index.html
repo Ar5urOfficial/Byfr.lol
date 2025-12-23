@@ -1,76 +1,59 @@
-function tab(e, id) {
-    document.querySelectorAll('.main').forEach(m => m.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (e) e.currentTarget.classList.add('active');
-}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byfr | Script Manager</title>
+    <link rel="icon" type="image/png" href="logo_Byfr.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-function notify(text) {
-    const container = document.getElementById('notification-container');
-    const toast = document.createElement('div');
-    toast.className = 'glass-toast';
-    toast.innerHTML = `✅ ${text}`;
-    container.appendChild(toast);
-    setTimeout(() => {
-        toast.classList.add('hide');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
+    <div class="grid-container">
+        <div class="grid-3d"></div>
+    </div>
+    
+    <div id="notification-container"></div>
 
-async function search() {
-    const query = document.getElementById('q').value;
-    const list = document.getElementById('results-list');
-    if(!query) return;
+    <div class="mac-window">
+        <div class="sidebar">
+            <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="nav-link active" onclick="tab(event, 'home')">🏠 Dashboard</div>
+            <div class="nav-link" onclick="tab(event, 'scripts')">🚀 ScriptBlox Hub</div>
+        </div>
 
-    list.innerHTML = '<p style="text-align: center; color: #00c2ff;">Wyszukiwanie w bazie Byfr...</p>';
-
-    try {
-        const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`;
-        
-        const response = await fetch(proxyUrl);
-        const rawData = await response.json();
-        const data = JSON.parse(rawData.contents);
-
-        list.innerHTML = '';
-
-        if(!data.result || !data.result.scripts) {
-            list.innerHTML = '<p>Brak wyników.</p>';
-            return;
-        }
-
-        data.result.scripts.forEach(s => {
-            const card = document.createElement('div');
-            card.className = 'result-card';
+        <div id="home" class="main active">
+            <div class="dashboard-header">
+                <div class="logo-wrapper">
+                    <img src="logo_Byfr.png" alt="B" class="b-logo">
+                    <span class="logo-text">YFR</span>
+                </div>
+                <p class="subtitle">Modern Script Management OS</p>
+            </div>
             
-            // NAPRAWA OBRAZKÓW - Google Proxy Engine
-            let thumb = 'https://via.placeholder.com/100?text=No+Img';
-            if (s.game && s.game.image) {
-                const fullImgUrl = s.game.image.startsWith('http') ? s.game.image : 'https://scriptblox.com' + s.game.image;
-                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullImgUrl)}`;
-            }
-            
-            card.innerHTML = `
-                <img src="${thumb}" class="game-img" onerror="this.src='https://via.placeholder.com/100?text=Error'">
-                <div class="info">
-                    <div style="font-weight:bold; color:white; font-size:16px;">${s.title}</div>
-                    <div style="font-size:12px; color:#666; margin-top:4px;">Gra: ${s.game ? s.game.name : 'Universal'}</div>
-                    <button class="copy-btn" onclick="copyLua('${s.slug}')">KOPIUJ LOADER</button>
-                </div>`;
-            list.appendChild(card);
-        });
-    } catch(e) {
-        list.innerHTML = '<p style="text-align: center; color: red;">Błąd połączenia. Odśwież stronę (CTRL+F5).</p>';
-    }
-}
+            <div class="status-card">
+                <p>Status: <span class="status-online">System Online</span></p>
+                <p class="status-info">Identity: Byfr Web Terminal v1.2</p>
+                <p class="status-info">Theme: Blue-Purple Gradient</p>
+            </div>
+        </div>
 
-function copyLua(slug) {
-    const code = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
-    const el = document.createElement('textarea');
-    el.value = code;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    notify("Skopiowano do schowka!");
-}
+        <div id="scripts" class="main">
+            <h2>ScriptBlox Explorer</h2>
+            <div class="search-box">
+                <input type="text" id="q" class="search-input" placeholder="Wyszukaj grę lub skrypt...">
+                <button onclick="search()" class="search-btn">SZUKAJ</button>
+            </div>
+            <div id="results-list">
+                <p class="placeholder-text">Wpisz nazwę gry, aby wyświetlić loader skryptów.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
