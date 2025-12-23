@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byfr</title>
+    <title>Byfr | Script Manager</title>
+    <link rel="icon" type="image/png" href="logo_Byfr.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,26 +18,39 @@
     <div class="mac-window">
         <div class="sidebar">
             <div class="dots">
-                <div class="dot" style="background: #ff5f56;"></div>
-                <div class="dot" style="background: #ffbd2e;"></div>
-                <div class="dot" style="background: #27c93f;"></div>
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
             </div>
             <div class="nav-link active" onclick="tab(event, 'home')">🏠 Dashboard</div>
             <div class="nav-link" onclick="tab(event, 'scripts')">🚀 ScriptBlox Hub</div>
         </div>
 
         <div id="home" class="main active">
-            <h1 style="color: var(--accent-red); font-size: 48px;">Byfr</h1>
-            <p style="color: #888;">Modern Script Management OS</p>
+            <div class="dashboard-header">
+                <div class="logo-wrapper">
+                    <img src="logo_Byfr.png" alt="B" class="b-logo">
+                    <span class="logo-text">YFR</span>
+                </div>
+                <p class="subtitle">Modern Script Management OS</p>
+            </div>
+            
+            <div class="status-card">
+                <p>Status: <span class="status-online">System Online</span></p>
+                <p class="status-info">Identity: Byfr Web Terminal v1.2</p>
+                <p class="status-info">Theme: Blue-Purple Gradient</p>
+            </div>
         </div>
 
         <div id="scripts" class="main">
             <h2>ScriptBlox Explorer</h2>
             <div class="search-box">
-                <input type="text" id="q" class="search-input" placeholder="Wyszukaj...">
+                <input type="text" id="q" class="search-input" placeholder="Wyszukaj grę lub skrypt...">
                 <button onclick="search()" class="search-btn">SZUKAJ</button>
             </div>
-            <div id="results-list"></div>
+            <div id="results-list">
+                <p class="placeholder-text">Wpisz nazwę gry, aby wyświetlić loader skryptów.</p>
+            </div>
         </div>
     </div>
 
