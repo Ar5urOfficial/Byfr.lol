@@ -1,4 +1,4 @@
-// Funkcja przełączania zakładek
+// Zarządzanie zakładkami
 function tab(e, id) {
     document.querySelectorAll('.main').forEach(m => m.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
@@ -6,13 +6,28 @@ function tab(e, id) {
     e.currentTarget.classList.add('active');
 }
 
-// Główna funkcja wyszukiwania - Naprawione obrazki i API
+// Funkcja szklanego powiadomienia
+function notify(text) {
+    const container = document.getElementById('notification-container');
+    const toast = document.createElement('div');
+    toast.className = 'glass-toast';
+    toast.innerHTML = `<span>✅</span> ${text}`;
+    
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Wyszukiwanie skryptów
 async function search() {
     const query = document.getElementById('q').value;
     const list = document.getElementById('results-list');
     if(!query) return;
 
-    list.innerHTML = '<p style="text-align: center; color: #ff3b30;">Szukanie w bazie...</p>';
+    list.innerHTML = '<p style="text-align: center; color: #ff3b30;">Ładowanie skryptów Byfr...</p>';
 
     try {
         const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
@@ -24,7 +39,7 @@ async function search() {
 
         list.innerHTML = '';
 
-        if(!data.result || !data.result.scripts || data.result.scripts.length === 0) {
+        if(!data.result || !data.result.scripts.length) {
             list.innerHTML = '<p style="text-align: center;">Brak wyników.</p>';
             return;
         }
@@ -33,50 +48,43 @@ async function search() {
             const card = document.createElement('div');
             card.className = 'result-card';
             
-            // NAPRAWA OBRAZKÓW: Używamy proxy dla zdjęć, żeby ScriptBlox ich nie blokował
-            let thumb = 'https://via.placeholder.com/100?text=No+Img';
-            if(s.game && s.game.image) {
-                thumb = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://scriptblox.com' + s.game.image)}`;
+            // NAPRAWA OBRAZKÓW: Używamy proxy Google do obejścia blokad ScriptBlox
+            let imageUrl = 'https://via.placeholder.com/100?text=No+Img';
+            if (s.game && s.game.image) {
+                const fullUrl = 'https://scriptblox.com' + s.game.image;
+                imageUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullUrl)}`;
             }
             
             card.innerHTML = `
-                <img src="${thumb}" class="game-img" style="width:100px; height:100px; border-radius:8px; object-fit:cover;">
+                <img src="${imageUrl}" class="game-img" loading="lazy">
                 <div class="info">
-                    <div class="title" style="font-weight:bold; color:white;">${s.title}</div>
-                    <div class="meta" style="font-size:12px; color:#aaa;">Gra: ${s.game ? s.game.name : 'Unknown'}</div>
-                    <button class="copy-btn" 
-                            onclick="copyLua('${s.slug}')" 
-                            style="margin-top:10px; padding:8px 15px; cursor:pointer; background:#333; color:white; border:1px solid #555; border-radius:5px;">
-                        KOPIUJ LOADER
-                    </button>
+                    <div class="title">${s.title}</div>
+                    <div class="meta">Gra: ${s.game ? s.game.name : 'Unknown'}</div>
+                    <button class="copy-btn" onclick="copyLua('${s.slug}')">KOPIUJ LOADER</button>
                 </div>
             `;
             list.appendChild(card);
         });
     } catch(e) {
-        list.innerHTML = '<p style="text-align: center; color: red;">Błąd API. Odśwież stronę.</p>';
+        list.innerHTML = '<p style="text-align: center; color: red;">Błąd połączenia. Odśwież stronę.</p>';
     }
 }
 
-// NAPRAWIONE KOPIOWANIE: Metoda działająca na GitHub Pages i telefonach
+// Naprawione kopiowanie
 function copyLua(slug) {
     const code = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
     
-    // Tworzymy niewidoczne pole tekstowe, żeby "oszukać" zabezpieczenia kopiowania
     const el = document.createElement('textarea');
     el.value = code;
     document.body.appendChild(el);
     el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-
-    // Powiadomienie (Toast)
-    const t = document.getElementById('toast');
-    if(t) {
-        t.innerText = "SKOPIOWANO!";
-        t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 2000);
-    } else {
-        alert("Skopiowano Loader!");
+    
+    try {
+        document.execCommand('copy');
+        notify("Skopiowano do schowka!");
+    } catch (err) {
+        console.error('Błąd kopiowania:', err);
     }
+    
+    document.body.removeChild(el);
 }
