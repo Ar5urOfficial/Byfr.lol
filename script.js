@@ -11,10 +11,7 @@ function notify(text) {
     toast.className = 'glass-toast';
     toast.innerHTML = `✅ ${text}`;
     container.appendChild(toast);
-    setTimeout(() => {
-        toast.classList.add('hide');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    setTimeout(() => { toast.remove(); }, 3000);
 }
 
 async function search() {
@@ -22,7 +19,7 @@ async function search() {
     const list = document.getElementById('results-list');
     if(!query) return;
 
-    list.innerHTML = '<p style="text-align: center; color: #00c2ff;">Wyszukiwanie w bazie Byfr...</p>';
+    list.innerHTML = '<p>Ładowanie...</p>';
 
     try {
         const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
@@ -34,43 +31,33 @@ async function search() {
 
         list.innerHTML = '';
 
-        if(!data.result || !data.result.scripts) {
-            list.innerHTML = '<p>Brak wyników.</p>';
-            return;
-        }
-
         data.result.scripts.forEach(s => {
             const card = document.createElement('div');
             card.className = 'result-card';
             
-            // NAPRAWA OBRAZKÓW - Google Proxy Engine
-            let thumb = 'https://via.placeholder.com/100?text=No+Img';
+            // Naprawiony system obrazków
+            let thumb = 'https://via.placeholder.com/100';
             if (s.game && s.game.image) {
-                const fullImgUrl = s.game.image.startsWith('http') ? s.game.image : 'https://scriptblox.com' + s.game.image;
-                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullImgUrl)}`;
+                const fullImg = 'https://scriptblox.com' + s.game.image;
+                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullImg)}`;
             }
             
             card.innerHTML = `
-                <img src="${thumb}" class="game-img" onerror="this.src='https://via.placeholder.com/100?text=Error'">
-                <div class="info">
-                    <div style="font-weight:bold; color:white; font-size:16px;">${s.title}</div>
-                    <div style="font-size:12px; color:#666; margin-top:4px;">Gra: ${s.game ? s.game.name : 'Universal'}</div>
+                <img src="${thumb}" class="game-img">
+                <div>
+                    <div style="font-weight:bold">${s.title}</div>
+                    <div style="font-size:12px; color:#888">${s.game ? s.game.name : 'Universal'}</div>
                     <button class="copy-btn" onclick="copyLua('${s.slug}')">KOPIUJ LOADER</button>
                 </div>`;
             list.appendChild(card);
         });
     } catch(e) {
-        list.innerHTML = '<p style="text-align: center; color: red;">Błąd połączenia. Odśwież stronę (CTRL+F5).</p>';
+        list.innerHTML = '<p style="color:red">Błąd połączenia!</p>';
     }
 }
 
 function copyLua(slug) {
     const code = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
-    const el = document.createElement('textarea');
-    el.value = code;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+    navigator.clipboard.writeText(code);
     notify("Skopiowano do schowka!");
 }
