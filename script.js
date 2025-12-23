@@ -6,7 +6,7 @@ function tab(e, id) {
     if (e) e.currentTarget.classList.add('active');
 }
 
-// System animowanych powiadomień
+// System powiadomień z płynnym zamykaniem
 function notify(text) {
     const container = document.getElementById('notification-container');
     const toast = document.createElement('div');
@@ -18,7 +18,7 @@ function notify(text) {
     // Po 3 sekundach zacznij animację znikania
     setTimeout(() => {
         toast.classList.add('hide');
-        // Usuń element z HTML po zakończeniu animacji (400ms)
+        // Usuń fizycznie element po zakończeniu animacji (400ms)
         setTimeout(() => {
             toast.remove();
         }, 400);
@@ -31,7 +31,7 @@ async function search() {
     const list = document.getElementById('results-list');
     if(!query) return;
 
-    list.innerHTML = '<p style="color: #00c2ff;">Wyszukiwanie w bazie Byfr...</p>';
+    list.innerHTML = '<p style="color: #00c2ff;">Wyszukiwanie skryptów...</p>';
 
     try {
         const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
@@ -52,11 +52,11 @@ async function search() {
             const card = document.createElement('div');
             card.className = 'result-card';
             
-            // Proxy dla obrazków
+            // System proxy dla obrazków
             let thumb = 'https://via.placeholder.com/100';
             if (s.game && s.game.image) {
-                const fullImg = s.game.image.startsWith('http') ? s.game.image : 'https://scriptblox.com' + s.game.image;
-                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullImg)}`;
+                const imgBase = s.game.image.startsWith('http') ? s.game.image : 'https://scriptblox.com' + s.game.image;
+                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(imgBase)}`;
             }
             
             card.innerHTML = `
@@ -69,11 +69,11 @@ async function search() {
             list.appendChild(card);
         });
     } catch(e) {
-        list.innerHTML = '<p style="color:red">Błąd połączenia. Spróbuj ponownie.</p>';
+        list.innerHTML = '<p style="color:red">Błąd API ScriptBlox.</p>';
     }
 }
 
-// Kopiowanie do schowka
+// Funkcja kopiowania
 function copyLua(slug) {
     const code = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
     navigator.clipboard.writeText(code).then(() => {
