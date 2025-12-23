@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byfr OS | macOS Edition</title>
+    <title>Byfr</title>
     <style>
         :root {
             --mac-bg: rgba(15, 15, 15, 0.95);
@@ -24,8 +24,8 @@
         .grid-bg {
             position: fixed; top: 0; left: 0; width: 200%; height: 200%;
             background-image: 
-                linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+                linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
             animation: move 20s linear infinite;
             z-index: -1;
@@ -37,10 +37,12 @@
             width: 950px; height: 650px;
             background: var(--mac-bg);
             backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
             border: 1px solid var(--mac-border);
             border-radius: 14px;
             display: flex; box-shadow: 0 50px 100px rgba(0,0,0,0.8);
             overflow: hidden;
+            position: relative;
         }
 
         /* Sidebar */
@@ -51,6 +53,7 @@
         }
         .dots { padding: 0 20px 25px; display: flex; gap: 8px; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
+        
         .nav-link {
             padding: 12px 20px; color: #888; cursor: pointer;
             font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
@@ -71,7 +74,9 @@
         .search-btn {
             background: var(--accent-red); border: none; color: white;
             padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold;
+            transition: 0.2s;
         }
+        .search-btn:hover { opacity: 0.8; transform: scale(1.02); }
 
         /* Karty wyników */
         .result-card {
@@ -87,21 +92,58 @@
         .copy-btn {
             background: #333; border: 1px solid #444; color: white;
             padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px;
+            transition: 0.2s;
         }
         .copy-btn:hover { background: var(--accent-red); border-color: var(--accent-red); }
 
-        /* Powiadomienie (Toast) */
-        #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--accent-red); color: white; padding: 10px 30px;
-            border-radius: 25px; display: none; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        /* SZKLANE POWIADOMIENIA */
+        #notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .glass-toast {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px 25px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .glass-toast.hide {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="grid-bg"></div>
-    <div id="toast">Skopiowano Loader LUA!</div>
+    
+    <div id="notification-container"></div>
 
     <div class="mac-window">
         <div class="sidebar">
@@ -115,22 +157,24 @@
         </div>
 
         <div id="home" class="main active">
-            <h1 style="color: var(--accent-red);">Byfr OS</h1>
-            <p style="color: #888;">Witaj w panelu sterowania. Użyj ScriptBlox Hub, aby pobrać skrypty.</p>
-            <div style="margin-top: 40px; border: 1px solid #333; padding: 20px; border-radius: 12px;">
-                <p>Status: <span style="color: #00ff00;">Operational</span></p>
-                <p style="font-size: 12px; color: #555;">Wersja: 1.0.4 (External JS)</p>
+            <h1 style="color: var(--accent-red); font-size: 40px; margin-bottom: 10px;">Byfr</h1>
+            <p style="color: #888;">Witaj w Byfr OS. System operacyjny do zarządzania skryptami.</p>
+            
+            <div style="margin-top: 40px; background: rgba(255,255,255,0.03); border: 1px solid #333; padding: 20px; border-radius: 12px;">
+                <p style="margin: 5px 0;">Status: <span style="color: #00ff00; font-weight: bold;">Operational</span></p>
+                <p style="margin: 5px 0; font-size: 12px; color: #555;">Serwer: Global Proxy Enabled</p>
+                <p style="margin: 5px 0; font-size: 12px; color: #555;">Wersja: 1.1.0 (Glass UI Update)</p>
             </div>
         </div>
 
         <div id="scripts" class="main">
-            <h2>ScriptBlox Explorer</h2>
+            <h2 style="color: white; margin-bottom: 20px;">ScriptBlox Explorer</h2>
             <div class="search-box">
-                <input type="text" id="q" class="search-input" placeholder="Wyszukaj grę...">
+                <input type="text" id="q" class="search-input" placeholder="Wyszukaj grę (np. Doors, Blox Fruits)...">
                 <button onclick="search()" class="search-btn">SZUKAJ</button>
             </div>
             <div id="results-list">
-                <p style="text-align: center; color: #444; margin-top: 50px;">Wpisz nazwę gry i naciśnij Szukaj.</p>
+                <p style="text-align: center; color: #444; margin-top: 50px;">Wpisz nazwę gry i zacznij eksplorację.</p>
             </div>
         </div>
     </div>
