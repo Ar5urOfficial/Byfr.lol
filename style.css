@@ -1,9 +1,10 @@
-/* --- ZMIENNE I PODSTAWA --- */
+/* --- ZMIENNE KOLORYSTYCZNE --- */
 :root {
     --mac-bg: rgba(15, 15, 15, 0.85);
     --mac-border: rgba(255, 255, 255, 0.1);
-    --accent-red: #ff3b30;
-    --sb-gray: #1e1e1e;
+    --accent-blue: #00c2ff;
+    --accent-purple: #7e57ff;
+    --sb-gray: #181818;
 }
 
 body, html {
@@ -15,25 +16,20 @@ body, html {
     perspective: 1200px;
 }
 
-/* --- TŁO 3D GRID (SPOWOLNIONE) --- */
+/* --- TŁO 3D GRID (POWOLNE) --- */
 .grid-container {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    background: radial-gradient(circle at center, #1a0000 0%, #000 100%);
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
 }
 
 .grid-3d {
-    position: absolute;
-    width: 400%; height: 400%;
-    top: -150%; left: -150%;
+    position: absolute; width: 400%; height: 400%; top: -150%; left: -150%;
     background-image: 
-        linear-gradient(rgba(255, 0, 0, 0.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.15) 1px, transparent 1px);
+        linear-gradient(rgba(0, 194, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(126, 87, 255, 0.15) 1px, transparent 1px);
     background-size: 60px 60px;
     transform: rotateX(65deg);
-    /* 20s = bardzo wolny i płynny ruch */
-    animation: grid-move 20s linear infinite;
+    animation: grid-move 20s linear infinite; /* 20 sekund - bardzo wolno */
 }
 
 @keyframes grid-move {
@@ -41,139 +37,73 @@ body, html {
     100% { transform: rotateX(65deg) translateY(60px); }
 }
 
-/* --- OKNO macOS --- */
+/* --- OKNO APLIKACJI --- */
 .mac-window {
     width: 950px; height: 650px;
     background: var(--mac-bg);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--mac-border);
     border-radius: 14px;
     display: flex; box-shadow: 0 50px 100px rgba(0,0,0,0.8);
     overflow: hidden;
     position: relative;
-    z-index: 10;
 }
 
 /* --- SIDEBAR --- */
-.sidebar { 
-    width: 220px; 
-    background: rgba(0,0,0,0.4); 
-    border-right: 1px solid var(--mac-border); 
-    padding: 20px 0; 
-}
-
+.sidebar { width: 220px; background: rgba(0,0,0,0.4); border-right: 1px solid var(--mac-border); padding: 20px 0; }
 .dots { padding: 0 20px 25px; display: flex; gap: 8px; }
 .dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
 
-.nav-link { 
-    padding: 12px 20px; 
-    color: #888; 
-    cursor: pointer; 
-    font-size: 14px; 
-    transition: 0.2s; 
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+.nav-link { padding: 12px 20px; color: #888; cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
 .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
-.nav-link.active { 
-    color: var(--accent-red); 
-    background: rgba(255,59,48,0.1); 
-    font-weight: bold; 
-}
+.nav-link.active { color: var(--accent-blue); background: rgba(0, 194, 255, 0.1); font-weight: bold; }
 
-/* --- CONTENT --- */
-.main { flex: 1; padding: 30px; overflow-y: auto; display: none; color: white; }
+/* --- GŁÓWNA TREŚĆ --- */
+.main { flex: 1; padding: 40px; overflow-y: auto; display: none; color: white; }
 .main.active { display: block; }
 
-/* --- SZUKAJKA --- */
+/* --- LOGO W DASHBOARDZIE --- */
+.logo-wrapper { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
+.b-logo { width: 85px; height: auto; filter: drop-shadow(0 0 15px rgba(0, 194, 255, 0.6)); }
+.logo-text {
+    font-size: 60px; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -2px;
+}
+.subtitle { color: #666; font-size: 14px; margin-top: -10px; margin-left: 5px; }
+
+/* --- KARTY STATUSU --- */
+.status-card { margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+.status-online { color: var(--accent-blue); font-weight: bold; }
+.status-info { font-size: 12px; color: #555; margin: 5px 0; }
+
+/* --- WYSZUKIWARKA I KARTY --- */
 .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
-.search-input { 
-    flex: 1; 
-    background: #252525; 
-    border: 1px solid #444; 
-    border-radius: 8px; 
-    padding: 12px; 
-    color: white; 
-    outline: none; 
-}
-.search-btn { 
-    background: var(--accent-red); 
-    border: none; 
-    color: white; 
-    padding: 0 25px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    font-weight: bold; 
-    transition: 0.2s;
-}
-.search-btn:hover { opacity: 0.8; }
+.search-input { flex: 1; background: #222; border: 1px solid #333; border-radius: 8px; padding: 12px; color: white; outline: none; }
+.search-btn { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border: none; color: white; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-/* --- KARTY SKRYPTÓW --- */
-.result-card { 
-    background: var(--sb-gray); 
-    border-radius: 12px; 
-    padding: 15px; 
-    margin-bottom: 20px; 
-    display: flex; 
-    gap: 15px; 
-    border: 1px solid transparent; 
-    transition: 0.3s;
-}
-.result-card:hover { border-color: var(--accent-red); }
-
-.game-img { 
-    width: 80px; 
-    height: 80px; 
-    border-radius: 8px; 
-    object-fit: cover; 
-    background: #111; 
-}
-
-.copy-btn { 
-    background: #333; 
-    border: 1px solid #444; 
-    color: white; 
-    padding: 8px 15px; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    margin-top: 10px; 
-    font-size: 12px;
-    transition: 0.2s;
-}
-.copy-btn:hover { background: #444; border-color: var(--accent-red); }
+.result-card { background: var(--sb-gray); border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; border: 1px solid transparent; transition: 0.2s; }
+.result-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+.game-img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; background: #111; }
+.copy-btn { background: #252525; border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-top: 10px; font-size: 12px; transition: 0.2s; }
+.copy-btn:hover { background: #333; border-color: var(--accent-blue); }
 
 /* --- SZKLANE POWIADOMIENIA --- */
-#notification-container { 
-    position: fixed; 
-    bottom: 20px; 
-    right: 20px; 
-    z-index: 9999; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 10px; 
-}
-
+#notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
 .glass-toast {
-    background: rgba(255, 255, 255, 0.1); 
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px; 
-    padding: 15px 25px; 
-    color: white; 
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: rgba(20, 20, 20, 0.7); 
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; padding: 15px 25px; color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-left: 4px solid var(--accent-blue);
     animation: slideIn 0.3s ease-out forwards;
 }
 
-@keyframes slideIn { 
-    from { transform: translateX(100%); opacity: 0; } 
-    to { transform: translateX(0); opacity: 1; } 
-}
-
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 .glass-toast.hide { animation: slideOut 0.3s ease-in forwards; }
-@keyframes slideOut { 
-    from { transform: translateX(0); opacity: 1; } 
-    to { transform: translateX(100%); opacity: 0; } 
-}
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
