@@ -22,7 +22,7 @@ async function search() {
     const list = document.getElementById('results-list');
     if(!query) return;
 
-    list.innerHTML = '<p style="text-align: center; color: #ff3b30;">Ładowanie danych Byfr...</p>';
+    list.innerHTML = '<p style="text-align: center; color: #00c2ff;">Wyszukiwanie w bazie Byfr...</p>';
 
     try {
         const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
@@ -34,28 +34,33 @@ async function search() {
 
         list.innerHTML = '';
 
+        if(!data.result || !data.result.scripts) {
+            list.innerHTML = '<p>Brak wyników.</p>';
+            return;
+        }
+
         data.result.scripts.forEach(s => {
             const card = document.createElement('div');
             card.className = 'result-card';
             
-            // Proxy obrazków przez Google
-            let imageUrl = 'https://via.placeholder.com/100?text=No+Img';
+            // NAPRAWA OBRAZKÓW - Google Proxy Engine
+            let thumb = 'https://via.placeholder.com/100?text=No+Img';
             if (s.game && s.game.image) {
-                const fullUrl = 'https://scriptblox.com' + s.game.image;
-                imageUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullUrl)}`;
+                const fullImgUrl = s.game.image.startsWith('http') ? s.game.image : 'https://scriptblox.com' + s.game.image;
+                thumb = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(fullImgUrl)}`;
             }
             
             card.innerHTML = `
-                <img src="${imageUrl}" class="game-img">
+                <img src="${thumb}" class="game-img" onerror="this.src='https://via.placeholder.com/100?text=Error'">
                 <div class="info">
-                    <div style="font-weight:bold; color:white;">${s.title}</div>
-                    <div style="font-size:12px; color:#777;">Gra: ${s.game ? s.game.name : 'Unknown'}</div>
+                    <div style="font-weight:bold; color:white; font-size:16px;">${s.title}</div>
+                    <div style="font-size:12px; color:#666; margin-top:4px;">Gra: ${s.game ? s.game.name : 'Universal'}</div>
                     <button class="copy-btn" onclick="copyLua('${s.slug}')">KOPIUJ LOADER</button>
                 </div>`;
             list.appendChild(card);
         });
     } catch(e) {
-        list.innerHTML = '<p style="text-align: center; color: red;">Błąd API. Spróbuj CTRL+F5.</p>';
+        list.innerHTML = '<p style="text-align: center; color: red;">Błąd połączenia. Odśwież stronę (CTRL+F5).</p>';
     }
 }
 
@@ -67,5 +72,5 @@ function copyLua(slug) {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    notify("Skopiowano Loader!");
+    notify("Skopiowano do schowka!");
 }
