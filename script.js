@@ -1,3 +1,4 @@
+// Przełączanie zakładek
 function tab(e, id) {
     document.querySelectorAll('.main').forEach(m => m.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
@@ -5,76 +6,93 @@ function tab(e, id) {
     if (e) e.currentTarget.classList.add('active');
 }
 
-// MOTYWY
-function setTheme(themeName) {
-    document.body.className = 'theme-' + themeName;
-    notify(`Zmieniono motyw na: ${themeName}`);
-    
-    if(themeName === 'red') {
+// System Motywów
+function setTheme(theme) {
+    document.body.className = 'theme-' + theme;
+    if(theme === 'red') {
         startHearts();
     } else {
         stopHearts();
     }
+    notify(`Motyw ${theme} aktywowany!`);
 }
 
-// SPADAJĄCE SERCA
-let heartInterval;
+// Logika spadających serc
+let heartsInterval;
 function startHearts() {
-    stopHearts(); // Czyścimy stare interwały
-    heartInterval = setInterval(() => {
+    stopHearts(); // Czyścimy przed startem
+    heartsInterval = setInterval(() => {
         const heart = document.createElement('div');
         heart.className = 'heart';
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 3 + 2 + "s";
-        heart.style.opacity = Math.random();
+        heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
         document.getElementById('hearts-container').appendChild(heart);
         
+        // Usunięcie serca z DOM po 5 sekundach
         setTimeout(() => heart.remove(), 5000);
-    }, 300);
+    }, 400); 
 }
 
 function stopHearts() {
-    clearInterval(heartInterval);
+    clearInterval(heartsInterval);
     const container = document.getElementById('hearts-container');
     if(container) container.innerHTML = '';
 }
 
-// NOTIFICATION
+// System Powiadomień
 function notify(text) {
     const container = document.getElementById('notification-container');
     const toast = document.createElement('div');
     toast.className = 'glass-toast';
-    toast.style.cssText = "background:rgba(20,20,20,0.9); padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent); color:white;";
     toast.innerHTML = `✅ ${text}`;
     container.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 500); }, 3000);
+    
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(120%)";
+        toast.style.transition = "0.4s";
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
 }
 
-// SEARCH (BEZ ZMIAN)
+// Wyszukiwarka ScriptBlox
 async function search() {
     const query = document.getElementById('q').value;
     const list = document.getElementById('results-list');
     if(!query) return;
-    list.innerHTML = '<p style="color:var(--accent)">Szukanie...</p>';
+
+    list.innerHTML = '<p style="color:var(--accent)">Wyszukiwanie w bazie Byfr...</p>';
+
     try {
-        const target = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=20`;
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`;
-        const response = await fetch(proxyUrl);
-        const rawData = await response.json();
-        const data = JSON.parse(rawData.contents);
+        const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://scriptblox.com/api/script/search?q=' + query + '&max=20')}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const json = JSON.parse(data.contents);
+
         list.innerHTML = '';
-        data.result.scripts.forEach(s => {
+        if(!json.result || !json.result.scripts) {
+            list.innerHTML = '<p>Brak wyników.</p>';
+            return;
+        }
+
+        json.result.scripts.forEach(s => {
             const card = document.createElement('div');
             card.className = 'result-card';
-            card.style.cssText = "background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #222; display:flex; gap:15px;";
-            card.innerHTML = `<div><div style="font-weight:bold">${s.title}</div><button style="background:var(--accent); border:none; padding:5px 10px; border-radius:5px; margin-top:10px; cursor:pointer;" onclick="copyLua('${s.slug}')">KOPIUJ</button></div>`;
+            card.innerHTML = `
+                <div style="font-weight:bold; font-size:16px;">${s.title}</div>
+                <button class="search-btn" style="padding:5px 12px; margin-top:8px; font-size:12px;" onclick="copyLua('${s.slug}')">KOPIUJ</button>
+            `;
             list.appendChild(card);
         });
-    } catch(e) { list.innerHTML = 'Błąd!'; }
+    } catch(e) {
+        list.innerHTML = '<p style="color:red">Błąd połączenia.</p>';
+    }
 }
 
+// Kopiowanie do schowka
 function copyLua(slug) {
-    const code = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
-    navigator.clipboard.writeText(code);
-    notify("Skopiowano!");
+    const loader = `loadstring(game:HttpGet("https://scriptblox.com/raw/${slug}"))()`;
+    navigator.clipboard.writeText(loader).then(() => {
+        notify("Skopiowano Loader!");
+    });
 }
