@@ -7,11 +7,10 @@
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ar5urofficial/Byfr.lol/main/logo_Byfr.png">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-default">
 
-    <div class="grid-container">
-        <div class="grid-3d"></div>
-    </div>
+    <div class="grid-container"><div class="grid-3d"></div></div>
+    <div id="hearts-container"></div>
     
     <div id="notification-container"></div>
 
@@ -24,6 +23,7 @@
             </div>
             <div class="nav-link active" onclick="tab(event, 'home')">🏠 Dashboard</div>
             <div class="nav-link" onclick="tab(event, 'scripts')">🚀 ScriptBlox Hub</div>
+            <div class="nav-link" onclick="tab(event, 'themes')">🎨 Themes</div>
         </div>
 
         <div id="home" class="main active">
@@ -34,10 +34,8 @@
                 </div>
                 <p class="subtitle">Modern Script Management OS</p>
             </div>
-            
             <div class="status-card">
                 <p>Status: <span class="status-online">System Online</span></p>
-                <p class="status-info">Identity: Byfr Web Terminal v1.2</p>
             </div>
         </div>
 
@@ -47,8 +45,20 @@
                 <input type="text" id="q" class="search-input" placeholder="Wyszukaj skrypt...">
                 <button onclick="search()" class="search-btn">SZUKAJ</button>
             </div>
-            <div id="results-list">
-                <p class="placeholder-text">Wpisz nazwę gry, aby znaleźć skrypty.</p>
+            <div id="results-list"></div>
+        </div>
+
+        <div id="themes" class="main">
+            <h2>Personalizacja Wyglądu</h2>
+            <div class="themes-grid">
+                <div class="theme-card default" onclick="setTheme('default')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #00c2ff, #7e57ff);"></div>
+                    <span>Default Blue</span>
+                </div>
+                <div class="theme-card red" onclick="setTheme('red')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff4d4d, #990000);"></div>
+                    <span>Minecraft Red</span>
+                </div>
             </div>
         </div>
     </div>
