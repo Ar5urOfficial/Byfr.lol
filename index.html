@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byfr | Script Manager</title>
+    <title>Byfr | Manager</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ar5urofficial/Byfr.lol/main/logo_Byfr.png">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +11,6 @@
 
     <div class="grid-container"><div class="grid-3d"></div></div>
     <div id="hearts-container"></div>
-    
     <div id="notification-container"></div>
 
     <div class="mac-window">
@@ -40,7 +39,7 @@
         </div>
 
         <div id="scripts" class="main">
-            <h2>ScriptBlox Explorer</h2>
+            <h2>ScriptBlox Hub</h2>
             <div class="search-box">
                 <input type="text" id="q" class="search-input" placeholder="Wyszukaj skrypt...">
                 <button onclick="search()" class="search-btn">SZUKAJ</button>
@@ -49,14 +48,14 @@
         </div>
 
         <div id="themes" class="main">
-            <h2>Personalizacja Wyglądu</h2>
+            <h2>Personalizacja</h2>
             <div class="themes-grid">
-                <div class="theme-card default" onclick="setTheme('default')">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #00c2ff, #7e57ff);"></div>
+                <div class="theme-card" onclick="setTheme('default')">
+                    <div class="theme-preview default-grad"></div>
                     <span>Default Blue</span>
                 </div>
-                <div class="theme-card red" onclick="setTheme('red')">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff4d4d, #990000);"></div>
+                <div class="theme-card" onclick="setTheme('red')">
+                    <div class="theme-preview red-grad"></div>
                     <span>Minecraft Red</span>
                 </div>
             </div>
